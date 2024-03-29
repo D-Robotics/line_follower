@@ -136,24 +136,17 @@ int LineFollowerPerceptionNode::SetNodePara() {
   return 0;
 }
 
-int LineFollowerPerceptionNode::SetOutputParser() {
-  auto model_manage = GetModel();
-  if (!model_manage) {
-    RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"), "Invalid model");
-    return -1;
-  }
-  int output_index = model_manage->GetOutputCount() - 1;
-
-  std::shared_ptr<OutputParser> line_coordinate_parser =
-      std::make_shared<LineCoordinateParser>();
-  model_manage->SetOutputParser(output_index, line_coordinate_parser);
-
-  return 0;
-}
-
 int LineFollowerPerceptionNode::PostProcess(
   const std::shared_ptr<DnnNodeOutput> &outputs) {
-  auto result = dynamic_cast<LineCoordinateResult *>(outputs->outputs[0].get());  
+
+  std::shared_ptr<LineCoordinateParser> line_coordinate_parser =
+      std::make_shared<LineCoordinateParser>();
+
+  std::shared_ptr<LineCoordinateResult> result =
+      std::make_shared<LineCoordinateResult>();
+
+  line_coordinate_parser->Parse(result, outputs->output_tensors[0]);
+
   int x = result->x;
   int y = result->y;
   RCLCPP_INFO(rclcpp::get_logger("LineFollowerPerceptionNode"),
@@ -223,7 +216,7 @@ void LineFollowerPerceptionNode::subscription_callback(
     hbSysFreeMem(&(output_tensor.sysMem[0]));
   }
 
-  std::shared_ptr<hobot::easy_dnn::NV12PyramidInput> pyramid = nullptr;
+  std::shared_ptr<hobot::dnn_node::NV12PyramidInput> pyramid = nullptr;
   pyramid = hobot::dnn_node::ImageProc::GetNV12PyramidFromNV12Img(
       reinterpret_cast<const char*>(output_tensor.sysMem[0].virAddr),
       224,
@@ -281,8 +274,6 @@ int LineFollowerPerceptionNode::Predict(
 
 int32_t LineCoordinateParser::Parse(
     std::shared_ptr<LineCoordinateResult> &output,
-    std::vector<std::shared_ptr<InputDescription>> &input_descriptions,
-    std::shared_ptr<OutputDescription> &output_description,
     std::shared_ptr<DNNTensor> &output_tensor) {
   if (!output_tensor) {
     RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"), "invalid out tensor");

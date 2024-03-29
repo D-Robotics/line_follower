@@ -29,33 +29,24 @@ using rclcpp::NodeOptions;
 using hobot::dnn_node::DNNInput;
 using hobot::dnn_node::DnnNode;
 using hobot::dnn_node::DnnNodeOutput;
-using hobot::dnn_node::DNNResult;
 using hobot::dnn_node::ModelTaskType;
 
 using hobot::dnn_node::DNNTensor;
-using hobot::dnn_node::OutputDescription;
-using hobot::dnn_node::OutputParser;
 
-using hobot::dnn_node::InputDescription;
-using hobot::dnn_node::SingleBranchOutputParser;
-
-class LineCoordinateResult : public DNNResult {
+class LineCoordinateResult {
  public:
   float x;
   float y;
-  void Reset() override {x = -1.0; y = -1.0;}
+  void Reset() {x = -1.0; y = -1.0;}
 };
 
-class LineCoordinateParser
-  : public SingleBranchOutputParser<LineCoordinateResult> {
+class LineCoordinateParser {
  public:
   LineCoordinateParser() {}
   ~LineCoordinateParser() {}
   int32_t Parse(
       std::shared_ptr<LineCoordinateResult>& output,
-      std::vector<std::shared_ptr<InputDescription>>& input_descriptions,
-      std::shared_ptr<OutputDescription>& output_description,
-      std::shared_ptr<DNNTensor>& output_tensor) override;
+      std::shared_ptr<DNNTensor>& output_tensor);
 };
 
 class LineFollowerPerceptionNode : public DnnNode {
@@ -66,7 +57,6 @@ class LineFollowerPerceptionNode : public DnnNode {
 
  protected:
   int SetNodePara() override;
-  int SetOutputParser() override;
   int PostProcess(const std::shared_ptr<DnnNodeOutput> &outputs) override;
 
  private:
