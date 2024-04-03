@@ -90,7 +90,7 @@ LineFollowerPerceptionNode::LineFollowerPerceptionNode(const std::string& node_n
   subscriber_ =
     this->create_subscription<hbm_img_msgs::msg::HbmMsg1080P>(
       "hbmem_img",
-      10,
+      rclcpp::SensorDataQoS(),
       std::bind(&LineFollowerPerceptionNode::subscription_callback,
       this,
       std::placeholders::_1)); 
