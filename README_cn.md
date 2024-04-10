@@ -37,32 +37,62 @@
 
 启动机器人后，通过终端SSH或者VNC连接机器人，点击本页面右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成相关Node的安装。
 
+tros foxy 版本
 ```bash
 sudo apt update
 sudo apt install -y tros-line-follower-perception
 sudo apt install -y tros-line-follower-model
 ```
 
+tros humble 版本
+```bash
+sudo apt update
+sudo apt install -y tros-humble-line-follower-perception
+sudo apt install -y tros-humble-line-follower-model
+```
+
 **3.运行巡线功能**
 
+tros foxy 版本
 ```shell
 source /opt/tros/local_setup.bash
 ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
 ```
 
+tros humble 版本
+```shell
+source /opt/tros/humble/local_setup.bash
+ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
+```
+
 运行mipi_cam
 
+tros foxy 版本
 ```powershell
 source /opt/tros/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
 
+tros humble 版本
+```powershell
+source /opt/tros/humble/local_setup.bash
+ros2 launch mipi_cam mipi_cam.launch.py
+```
+
 最后进入小车的运动控制package，originbot_base运行
 
+tros foxy 版本
 ```powershell
 source /opt/tros/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```
+
+tros humble 版本
+```powershell
+source /opt/tros/humble/local_setup.bash
+ros2 launch originbot_base robot.launch.py 
+```
+
 用PVC胶带搭建场景，巡线效果图如下图：
 ![](./imgs/demo.png)
 
