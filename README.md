@@ -37,29 +37,59 @@ The following operating process takes OriginBot as an example, and the methods o
 
 After starting the robot, connect to the robot via SSH or VNC in the terminal, click the "One-click Deployment" button at the top right of this page, copy and run the following commands on the RDK system to install the relevant Nodes.
 
+tros foxy:
 ```bash
 sudo apt update
 sudo apt install -y tros-line-follower-perception
 sudo apt install -y tros-line-follower-model
 ```
 
+tros humble:
+```bash
+sudo apt update
+sudo apt install -y tros-humble-line-follower-perception
+sudo apt install -y tros-humble-line-follower-model
+```
+
 **3. Run the line following function**
 
+tros foxy:
 ```shell
 source /opt/tros/local_setup.bash
 ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
 ```
+
+tros humble:
+```shell
+source /opt/tros/humble/local_setup.bash
+ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
+```
+
 Run mipi_cam
 
+tros foxy:
 ```powershell
 source /opt/tros/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
 
+tros humble:
+```powershell
+source /opt/tros/humble/local_setup.bash
+ros2 launch mipi_cam mipi_cam.launch.py
+```
+
 Next, enter the motion control package of the robot, originbot_base, and run
 
+tros foxy:
 ```powershell
 source /opt/tros/local_setup.bash
+ros2 launch originbot_base robot.launch.py 
+```
+
+tros humble:
+```powershell
+source /opt/tros/humble/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```
 
