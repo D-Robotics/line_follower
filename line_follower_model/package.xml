@@ -4,7 +4,7 @@
   <name>line_follower_model</name>
   <version>2.0.0</version>
   <description>TogetheROS app line follower model</description>
-  <maintainer email="kairui.wang@horizon.ai">kairui</maintainer>
+  <maintainer email="kairui.wang@d-robotics.cc">kairui</maintainer>
   <license>Apache License 2.0</license>
 
   <exec_depend>rclpy</exec_depend>

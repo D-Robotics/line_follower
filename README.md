@@ -100,9 +100,9 @@ Build the scene with PVC tape, and the line following effect is shown in the fig
 
 ![](./imgs/framework.png)
 
-The entire system is shown in the above figure. The Horizon RDK obtains environmental data in front of the robot through the camera. The image data is inferred by a pre-trained CNN model to obtain the coordinates of the guiding line. Then, based on certain control strategies, the robot's motion is calculated, and the motion control commands are sent to the robot via UART to achieve closed-loop control of the entire system.
+The entire system is shown in the above figure. The RDK obtains environmental data in front of the robot through the camera. The image data is inferred by a pre-trained CNN model to obtain the coordinates of the guiding line. Then, based on certain control strategies, the robot's motion is calculated, and the motion control commands are sent to the robot via UART to achieve closed-loop control of the entire system.
 
-The PC is used for data annotation and training. In order to improve efficiency, the image data is sent to the PC via Ethernet for annotation using the Horizon RDK.
+The PC is used for data annotation and training. In order to improve efficiency, the image data is sent to the PC via Ethernet for annotation using the RDK.
 
 ![](./imgs/roadmap.png)
 
@@ -111,8 +111,8 @@ The entire software engineering process includes 5 main steps:
 - Data collection and annotation, obtain corresponding data according to the task goal and annotate it for model training;
 - Model selection, select a suitable model structure according to the task goal to ensure that both performance and accuracy meet the requirements;
 - Model training, train the model using annotated data to achieve the required accuracy;
-- Model conversion, convert the trained floating-point model into a fixed-point model that can run on the Horizon RDK using the algorithm tool chain;
-- Edge deployment, run the converted model on the Horizon RDK, obtain perceptual results, and control robot motion.
+- Model conversion, convert the trained floating-point model into a fixed-point model that can run on the RDK using the algorithm tool chain;
+- Edge deployment, run the converted model on the RDK, obtain perceptual results, and control robot motion.
 
 The system workflow is as follows:
 

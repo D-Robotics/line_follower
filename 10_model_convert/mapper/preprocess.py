@@ -1,10 +1,10 @@
-# Copyright (c) 2021 Horizon Robotics.All Rights Reserved.
+# Copyright (c) 2024 D-Robotics.All Rights Reserved.
 #
 # The material in this file is confidential and contains trade secrets
-# of Horizon Robotics Inc. This is proprietary information owned by
-# Horizon Robotics Inc. No part of this work may be disclosed,
+# of D-Robotics Inc. This is proprietary information owned by
+# D-Robotics Inc. No part of this work may be disclosed,
 # reproduced, copied, transmitted, or used in any way for any purpose,
-# without the express written permission of Horizon Robotics Inc.
+# without the express written permission of D-Robotics Inc.
 
 import sys
 sys.path.append("../../../01_common/python/data/")

@@ -4,7 +4,7 @@
   <name>line_follower_perception</name>
   <version>2.1.0</version>
   <description>TogetheROS app line follower perception</description>
-  <maintainer email="kairui.wang@horizon.ai">kairui</maintainer>
+  <maintainer email="kairui.wang@d-robotics.cc">kairui</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

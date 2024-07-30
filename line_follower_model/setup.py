@@ -1,4 +1,4 @@
-# Copyright (c) 2022，Horizon Robotics.
+# Copyright (c) 2024，D-Robotics.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='kairui',
-    maintainer_email='kairui.wang@horizon.ai',
+    maintainer_email='kairui.wang@d-robotics.cc',
     description='TODO: Package description',
     license='Apache License 2.0',
     tests_require=['pytest'],
