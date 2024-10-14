@@ -30,65 +30,42 @@ The following robots are all compatible with RDK X3
 ## Robot Assembly
 The following operating process takes OriginBot as an example, and the methods of use for other robots meeting the conditions are similar. Refer to the robot's official website's [user guide](https://www.originbot.org/guide/quick_guide/), complete the hardware assembly, image burning, and sample running of the robot, and confirm that the basic functions of the robot can run smoothly.
 
-## Package Installation
+## Compile and Run
 **1. Refer to [OriginBot instructions](https://github.com/nodehubs/originbot_minimal/blob/develop/README.md) to complete the installation of OriginBot basic functions**
 
-**2. Install the package**
+**2. Compile**
 
 After starting the robot, connect to the robot via SSH or VNC in the terminal, click the "One-click Deployment" button at the top right of this page, copy and run the following commands on the RDK system to install the relevant Nodes.
 
-tros foxy:
 ```bash
-sudo apt update
-sudo apt install -y tros-line-follower-perception
-sudo apt install -y tros-line-follower-model
-```
+# Pull the code
+mkdir -p ~/line_follower_ws/src && cd ~/line_follower_ws/src
+git clone https://github.com/D-Robotics/line_follower.git -b feature-x5
 
-tros humble:
-```bash
-sudo apt update
-sudo apt install -y tros-humble-line-follower-perception
-sudo apt install -y tros-humble-line-follower-model
+# Compile
+cd ..
+source /opt/tros/humble/setup.bash
+colcon build
 ```
 
 **3. Run the line following function**
 
-tros foxy:
 ```shell
-source /opt/tros/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
-```
-
-tros humble:
-```shell
-source /opt/tros/humble/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
+source ~/line_follower_ws/install/setup.bash
+cp -r ~/line_follower_ws/install/line_follower_perception/lib/line_follower_perception/config/ .
+ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=config/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
 ```
 
 Run mipi_cam
 
-tros foxy:
-```powershell
-source /opt/tros/local_setup.bash
-ros2 launch mipi_cam mipi_cam.launch.py
-```
-
-tros humble:
-```powershell
+```shell
 source /opt/tros/humble/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
 
 Next, enter the motion control package of the robot, originbot_base, and run
 
-tros foxy:
-```powershell
-source /opt/tros/local_setup.bash
-ros2 launch originbot_base robot.launch.py 
-```
-
-tros humble:
-```powershell
+```shell
 source /opt/tros/humble/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```

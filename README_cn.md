@@ -30,65 +30,43 @@
 ## 机器人组装
 以下操作过程以OriginBot为例，满足条件的其他机器人使用方法类似。参考机器人官网的[使用指引](https://www.originbot.org/guide/quick_guide/)，完成机器人的硬件组装、镜像烧写及示例运行，确认机器人的基础功能可以顺利运行。
 
-## 安装功能包
+## 编译与运行
 **1.参考[OriginBot说明](https://github.com/nodehubs/originbot_minimal/blob/develop/README.md)，完成Originbit基础功能安装**
 
-**2.安装功能包**
+**2.编译功能包**
 
 启动机器人后，通过终端SSH或者VNC连接机器人，点击本页面右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成相关Node的安装。
 
-tros foxy 版本
 ```bash
-sudo apt update
-sudo apt install -y tros-line-follower-perception
-sudo apt install -y tros-line-follower-model
-```
+#拉取代码
+mkdir -p ~/line_follower_ws/src && cd ~/line_follower_ws/src
+git clone https://github.com/D-Robotics/line_follower.git -b feature-x5
 
-tros humble 版本
-```bash
-sudo apt update
-sudo apt install -y tros-humble-line-follower-perception
-sudo apt install -y tros-humble-line-follower-model
+# 编译
+cd ..
+source /opt/tros/humble/setup.bash
+colcon build
 ```
 
 **3.运行巡线功能**
 
-tros foxy 版本
 ```shell
-source /opt/tros/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
-```
-
-tros humble 版本
-```shell
-source /opt/tros/humble/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
+source ~/line_follower_ws/install/setup.bash
+cp -r ~/line_follower_ws/install/line_follower_perception/lib/line_follower_perception/config/ .
+ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=config/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
 ```
 
 运行mipi_cam
 
-tros foxy 版本
-```powershell
-source /opt/tros/local_setup.bash
-ros2 launch mipi_cam mipi_cam.launch.py
-```
 
-tros humble 版本
-```powershell
+```shell
 source /opt/tros/humble/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
 
 最后进入小车的运动控制package，originbot_base运行
 
-tros foxy 版本
-```powershell
-source /opt/tros/local_setup.bash
-ros2 launch originbot_base robot.launch.py 
-```
-
-tros humble 版本
-```powershell
+```shell
 source /opt/tros/humble/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```
@@ -133,9 +111,9 @@ PC用于进行数据标注以及训练，为了提高效率这里采用RDK将图
 ## 参数
 
 | 参数名                | 类型        | 解释                                                                                                                                  | 是否必须 | 支持的配置           | 默认值                                               |
-| --------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------- | ---------------------------------------------------- |
-| model_path       | std::string | 推理使用的模型文件                                                                                                                  | 否       | 根据实际模型路径配置 | ./resnet18_224x224_nv12.bin |
-| model_name       | std::string | 推理使用的模型文件名字                                                                                                                   | 否       | 根据实际模型路径配置 | resnet18_224x224_nv12.bin |
+| --------------------- | ----------- | ----------------------------- | -------- | -------------------- | --------------------------- |
+| model_path       | std::string | 推理使用的模型文件          | 否       | 根据实际模型路径配置 | ./resnet18_224x224_nv12.bin |
+| model_name       | std::string | 推理使用的模型文件名字      | 否       | 根据实际模型路径配置 | resnet18_224x224_nv12.bin |
 
 
 

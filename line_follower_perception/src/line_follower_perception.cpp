@@ -19,6 +19,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "dnn_node/util/image_proc.h"
+#include "hobot_cv/hobotcv_imgproc.h"
 
 void prepare_nv12_tensor_without_padding(const char *image_data,
                                          int image_height,
@@ -189,36 +190,15 @@ void LineFollowerPerceptionNode::subscription_callback(
   roi.top = 160;
   roi.right = 960 - 1;
   roi.bottom = 384 - 1;
-  hbDNNTensor input_tensor;
-  prepare_nv12_tensor_without_padding(reinterpret_cast<const char*>(msg->data.data()),
-                                      msg->height,
-                                      msg->width,
-                                      &input_tensor);
-  // Prepare output tensor
-  hbDNNTensor output_tensor;
-  prepare_nv12_tensor_without_padding(224, 224, &output_tensor);
 
-  // resize
-  hbDNNResizeCtrlParam ctrl = {
-      HB_BPU_CORE_0, 0, HB_DNN_RESIZE_TYPE_BILINEAR, 0, 0, 0, 0};
-  hbDNNTaskHandle_t task_handle = nullptr;
-  hbDNNResize(&task_handle, &output_tensor, &input_tensor, &roi, &ctrl);
-  ret = hbDNNWaitTaskDone(task_handle, 0);
-  if (0 != ret) {
-    RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"), "hbDNNWaitTaskDone failed!");
-    hbSysFreeMem(&(input_tensor.sysMem[0]));
-    hbSysFreeMem(&(output_tensor.sysMem[0]));
-  }
-  hbDNNReleaseTask(task_handle);
-  if (0 != ret) {
-    RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"), "release task failed!");
-    hbSysFreeMem(&(input_tensor.sysMem[0]));
-    hbSysFreeMem(&(output_tensor.sysMem[0]));
-  }
+  cv::Mat img_mat(msg->height * 3 / 2, msg->width, CV_8UC1, (void*)(msg->data.data()));
+  cv::Range rowRange(roi.top, 480);
+  cv::Range colRange(roi.left, 640);
+  cv::Mat crop_img_mat = hobot_cv::hobotcv_crop(img_mat, msg->height, msg->width, 224, 224, rowRange, colRange);
 
   std::shared_ptr<hobot::dnn_node::NV12PyramidInput> pyramid = nullptr;
   pyramid = hobot::dnn_node::ImageProc::GetNV12PyramidFromNV12Img(
-      reinterpret_cast<const char*>(output_tensor.sysMem[0].virAddr),
+      reinterpret_cast<const char*>(crop_img_mat.data),
       224,
       224,
       224,
@@ -244,20 +224,6 @@ void LineFollowerPerceptionNode::subscription_callback(
   auto dnn_output = std::shared_ptr<DnnNodeOutput>();
 
   ret = Predict(inputs, dnn_output, rois);
-
-  ret = hbSysFreeMem(&(input_tensor.sysMem[0]));
-  if (ret != 0) {
-    RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"),
-                 "Free input_tensor mem failed!");
-    hbSysFreeMem(&(output_tensor.sysMem[0]));
-  }
-  ret = hbSysFreeMem(&(output_tensor.sysMem[0]));
-  if (ret != 0) {
-    RCLCPP_ERROR(rclcpp::get_logger("LineFollowerPerceptionNode"),
-                 "Free output_tensor mem failed!");
-  }
-
-
 }
 
 int LineFollowerPerceptionNode::Predict(
