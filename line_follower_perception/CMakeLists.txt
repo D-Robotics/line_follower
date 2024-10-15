@@ -68,6 +68,11 @@ target_include_directories(line_follower_perception PUBLIC
 install(TARGETS line_follower_perception
   DESTINATION lib/${PROJECT_NAME})
 
+install(DIRECTORY
+	  ${PROJECT_SOURCE_DIR}/config/
+	    DESTINATION lib/${PROJECT_NAME}/config
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
