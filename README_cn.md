@@ -30,51 +30,51 @@
 ## 机器人组装
 以下操作过程以OriginBot为例，满足条件的其他机器人使用方法类似。参考机器人官网的[使用指引](https://www.originbot.org/guide/quick_guide/)，完成机器人的硬件组装、镜像烧写及示例运行，确认机器人的基础功能可以顺利运行。
 
-## 安装功能包
+## 编译与运行
 **1.参考[OriginBot说明](https://github.com/nodehubs/originbot_minimal/blob/develop/README.md)，完成Originbit基础功能安装**
 
-**2.安装功能包**
+**2.编译功能包**
 
 启动机器人后，通过终端SSH或者VNC连接机器人，点击本页面右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成相关Node的安装。
 
-tros foxy 版本
 ```bash
-sudo apt update
-sudo apt install -y tros-line-follower-perception
-sudo apt install -y tros-line-follower-model
-```
+#拉取代码
+mkdir -p ~/line_follower_ws/src && cd ~/line_follower_ws/src
 
-tros humble 版本
-```bash
-sudo apt update
-sudo apt install -y tros-humble-line-follower-perception
-sudo apt install -y tros-humble-line-follower-model
+# RDK X5
+git clone https://github.com/D-Robotics/line_follower.git -b feature-x5
+# RDK X3
+git clone https://github.com/D-Robotics/line_follower.git -b feature-x3
+
+# 编译
+cd ..
+
+# tros humble 版本
+source /opt/tros/humble/local_setup.bash
+# tros foxy 版本
+source /opt/tros/local_setup.bash
+
+colcon build
 ```
 
 **3.运行巡线功能**
 
-tros foxy 版本
 ```shell
-source /opt/tros/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
-```
-
-tros humble 版本
-```shell
-source /opt/tros/humble/local_setup.bash
-ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=/opt/tros/share/line_follower_perception/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
+source ~/line_follower_ws/install/setup.bash
+cp -r ~/line_follower_ws/install/line_follower_perception/lib/line_follower_perception/config/ .
+ros2 run line_follower_perception line_follower_perception --ros-args -p model_path:=config/resnet18_224x224_nv12.bin -p model_name:=resnet18_224x224_nv12
 ```
 
 运行mipi_cam
 
 tros foxy 版本
-```powershell
+```shell
 source /opt/tros/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
 
 tros humble 版本
-```powershell
+```shell
 source /opt/tros/humble/local_setup.bash
 ros2 launch mipi_cam mipi_cam.launch.py
 ```
@@ -82,13 +82,17 @@ ros2 launch mipi_cam mipi_cam.launch.py
 最后进入小车的运动控制package，originbot_base运行
 
 tros foxy 版本
-```powershell
+```shell
+sudo apt update
+sudo apt install -y tros-originbot-base tros-serial tros-originbot-msgs
 source /opt/tros/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```
 
 tros humble 版本
-```powershell
+```shell
+sudo apt update
+sudo apt install -y tros-humble-originbot-base tros-humble-serial tros-humble-originbot-msgs
 source /opt/tros/humble/local_setup.bash
 ros2 launch originbot_base robot.launch.py 
 ```
