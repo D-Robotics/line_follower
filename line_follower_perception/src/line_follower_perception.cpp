@@ -76,7 +76,7 @@ LineFollowerPerceptionNode::LineFollowerPerceptionNode(const std::string& node_n
                       const NodeOptions& options)
   : DnnNode(node_name, options) {
   this->declare_parameter("model_path", "./resnet18_224x224_nv12.bin");
-  this->declare_parameter("model_name", "resnet18_224x224_nv12.bin");
+  this->declare_parameter("model_name", "resnet18_224x224_nv12");
   if (GetParams() == false) {
     RCLCPP_ERROR(this->get_logger(), "LineFollowerPerceptionNode GetParams() failed\n\n");
     return;
